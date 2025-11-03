@@ -4,7 +4,7 @@
 set -euo pipefail
 
 # --- Configuration ---
-NERD_FONT_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/FiraCode.zip"
+NERD_FONT_URL="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/FiraCode.zip"
 OMP_BINARY_URL="https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64"
 OMP_THEMES_URL="https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/themes.zip"
 
@@ -15,7 +15,7 @@ FIRACODE_ZIP="$HOME/Downloads/firacode.zip"
 THEMES_ZIP="$POSHTHEMES_DIR/themes.zip"
 FISH_CONFIG_DIR="$HOME/.config/fish"
 FISH_CONFIG_FILE="$FISH_CONFIG_DIR/config.fish"
-OMP_INIT_LINE='oh-my-posh init fish --config $HOME/.poshthemes/montys.omp.json | source'
+OMP_INIT_LINE='oh-my-posh init fish --config $HOME/.poshthemes/kushal.omp.json | source'
 
 # --- Helpers ---
 info() { printf '\e[1;34m• %s\e[0m\n' "$1"; }
