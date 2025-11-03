@@ -44,6 +44,10 @@ The `install-ohmyposh-windows.ps1` PowerShell script:
 - Downloads Oh My Posh themes
 - Configures Oh My Posh in your PowerShell profile with the kushal theme
 
+## Available Themes
+
+The scripts install the kushal theme by default, but Oh My Posh offers many other themes. You can browse all available themes at [Oh My Posh Themes](https://ohmypo.sh/docs/themes#kushal). After installation, you can change to a different theme by modifying your shell configuration file with your preferred theme from the gallery.
+
 ## Usage
 
 ### Linux Usage
