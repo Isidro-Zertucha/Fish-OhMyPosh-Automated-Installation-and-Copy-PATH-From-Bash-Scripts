@@ -1,33 +1,24 @@
 # Fish and Oh My Posh Installation Scripts
 
-This repository contains scripts to help you set up Fish shell with Oh My Posh and synchronize your bash PATH to fish PATH on Linux, as well as Oh My Posh for PowerShell on Windows.
+This repository contains scripts to help you set up Fish shell with Oh My Posh and synchronize your bash PATH to fish PATH on Linux and macOS, as well as Oh My Posh for PowerShell on Windows.
 
 ## Scripts
 
 ### Linux and macOS Scripts
 
-#### 1. Fish and Oh My Posh Installation for Linux
+#### 1. Fish and Oh My Posh Installation (Linux/macOS)
 
-The `install-fish-ohmyposh-linux.sh` script automatically:
-- Installs Fish shell using your system's package manager (supports apt, dnf, pamac, pacman, zypper)
+The `install-fish-ohmyposh.sh` script automatically:
+- Detects your platform (Linux/macOS) and adjusts behavior accordingly
+- For Linux: Installs Fish shell using your system's package manager (supports apt, dnf, pamac, pacman, zypper)
+- For macOS: Checks for and installs Homebrew if not present, then installs Fish shell using Homebrew
 - Sets Fish as your default shell
 - Installs Oh My Posh
 - Downloads and installs Nerd Fonts (FiraCode)
 - Downloads Oh My Posh themes
 - Configures Oh My Posh in your Fish shell with the kushal theme
 
-#### 2. Fish and Oh My Posh Installation for macOS
-
-The `install-fish-ohmyposh-macos.sh` script automatically:
-- Checks for and installs Homebrew if not present
-- Installs Fish shell using Homebrew
-- Sets Fish as your default shell
-- Installs Oh My Posh
-- Downloads and installs Nerd Fonts (FiraCode)
-- Downloads Oh My Posh themes
-- Configures Oh My Posh in your Fish shell with the kushal theme
-
-#### 3. Bash PATH to Fish PATH Synchronization (Linux and macOS)
+#### 2. Bash PATH to Fish PATH Synchronization (Linux and macOS)
 
 The `sync-bash-path-to-fish-path.sh` script:
 - Synchronizes your current bash PATH environment variable to your fish configuration
@@ -36,7 +27,7 @@ The `sync-bash-path-to-fish-path.sh` script:
 
 ### Windows Script
 
-#### 4. Oh My Posh Installation for Windows (PowerShell)
+#### 3. Oh My Posh Installation for Windows (PowerShell)
 
 The `install-ohmyposh-windows.ps1` PowerShell script:
 - Installs Oh My Posh using Chocolatey or Winget (with fallback to manual installation)
@@ -50,64 +41,32 @@ The scripts install the kushal theme by default, but Oh My Posh offers many othe
 
 ## Usage
 
-### Linux Usage
-
 #### Option 1: Execute directly from GitHub (Review first!)
 
 **IMPORTANT**: Before running these commands, review the scripts on GitHub to ensure you're comfortable with what they do.
 
-For Fish and Oh My Posh installation on Linux:
+For Fish and Oh My Posh installation on Linux/macOS:
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Isidro-Zertucha/Fish-OhMyPosh-Automated-Installation-and-Copy-PATH-From-Bash-Scripts/main/scripts/install-fish-ohmyposh-linux.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Isidro-Zertucha/Fish-OhMyPosh-Automated-Installation-and-Copy-PATH-From-Bash-Scripts/main/scripts/install-fish-ohmyposh.sh | bash
 ```
 
-For PATH synchronization on Linux (and macOS):
+For PATH synchronization on Linux/macOS:
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Isidro-Zertucha/Fish-OhMyPosh-Automated-Installation-and-Copy-PATH-From-Bash-Scripts/main/scripts/sync-bash-path-to-fish-path.sh | bash
 ```
 
 #### Option 2: Download, review, then execute
 
-For Fish and Oh My Posh installation on Linux:
+For Fish and Oh My Posh installation on Linux/macOS:
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Isidro-Zertucha/Fish-OhMyPosh-Automated-Installation-and-Copy-PATH-From-Bash-Scripts/main/scripts/install-fish-ohmyposh-linux.sh -o install-fish-ohmyposh-linux.sh
+curl -fsSL https://raw.githubusercontent.com/Isidro-Zertucha/Fish-OhMyPosh-Automated-Installation-and-Copy-PATH-From-Bash-Scripts/main/scripts/install-fish-ohmyposh.sh -o install-fish-ohmyposh.sh
 # Review the script contents
-cat install-fish-ohmyposh-linux.sh
+cat install-fish-ohmyposh.sh
 # Execute if you're satisfied
-bash install-fish-ohmyposh-linux.sh
+bash install-fish-ohmyposh.sh
 ```
 
-For PATH synchronization on Linux (and macOS):
-```bash
-curl -fsSL https://raw.githubusercontent.com/Isidro-Zertucha/Fish-OhMyPosh-Automated-Installation-and-Copy-PATH-From-Bash-Scripts/main/scripts/sync-bash-path-to-fish-path.sh -o sync-bash-path-to-fish-path.sh
-# Review the script contents
-cat sync-bash-path-to-fish-path.sh
-# Execute if you're satisfied
-bash sync-bash-path-to-fish-path.sh
-```
-
-### macOS Usage
-
-For Fish and Oh My Posh installation on macOS:
-```bash
-curl -fsSL https://raw.githubusercontent.com/Isidro-Zertucha/Fish-OhMyPosh-Automated-Installation-and-Copy-PATH-From-Bash-Scripts/main/scripts/install-fish-ohmyposh-macos.sh | bash
-```
-
-Or download and review first:
-```bash
-curl -fsSL https://raw.githubusercontent.com/Isidro-Zertucha/Fish-OhMyPosh-Automated-Installation-and-Copy-PATH-From-Bash-Scripts/main/scripts/install-fish-ohmyposh-macos.sh -o install-fish-ohmyposh-macos.sh
-# Review the script contents
-cat install-fish-ohmyposh-macos.sh
-# Execute if you're satisfied
-bash install-fish-ohmyposh-macos.sh
-```
-
-For PATH synchronization on macOS (and Linux):
-```bash
-curl -fsSL https://raw.githubusercontent.com/Isidro-Zertucha/Fish-OhMyPosh-Automated-Installation-and-Copy-PATH-From-Bash-Scripts/main/scripts/sync-bash-path-to-fish-path.sh | bash
-```
-
-Or download and review first:
+For PATH synchronization on Linux/macOS:
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Isidro-Zertucha/Fish-OhMyPosh-Automated-Installation-and-Copy-PATH-From-Bash-Scripts/main/scripts/sync-bash-path-to-fish-path.sh -o sync-bash-path-to-fish-path.sh
 # Review the script contents
@@ -135,19 +94,13 @@ Note: The Windows script requires PowerShell and works best when run with Admini
 
 ## Security Notice
 
-The Linux and macOS scripts require `sudo` access to install Fish and Oh My Posh to system directories. The Windows PowerShell script may require Administrator privileges for optimal installation. Always review scripts before running them directly from the internet, especially ones that require elevated privileges.
+The Linux/macOS script requires `sudo` access to install Fish and Oh My Posh to system directories. The Windows PowerShell script may require Administrator privileges for optimal installation. Always review scripts before running them directly from the internet, especially ones that require elevated privileges.
 
 ## Prerequisites
 
-### Linux:
+### Linux/macOS:
 - `sudo` access
-- A Linux system with one of the supported package managers (apt, dnf, pamac, pacman, zypper)
-- `curl` or `wget` for downloading dependencies
-
-### macOS:
-- `sudo` access
-- macOS 10.12 or later
-- Homebrew (will be installed automatically if not present)
+- Linux system with one of the supported package managers (apt, dnf, pamac, pacman, zypper), or macOS 10.12+ with Homebrew (will be installed automatically if not present)
 - `curl` or `wget` for downloading dependencies
 
 ### Windows:
