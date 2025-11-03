@@ -4,7 +4,7 @@ This repository contains scripts to help you set up Fish shell with Oh My Posh a
 
 ## Scripts
 
-### Linux Scripts
+### Linux and macOS Scripts
 
 #### 1. Fish and Oh My Posh Installation for Linux
 
@@ -16,16 +16,7 @@ The `install-fish-ohmyposh-linux.sh` script automatically:
 - Downloads Oh My Posh themes
 - Configures Oh My Posh in your Fish shell with the kushal theme
 
-#### 2. Bash PATH to Fish PATH Synchronization
-
-The `sync-bash-path-to-fish-path.sh` script (Linux only):
-- Synchronizes your current bash PATH environment variable to your fish configuration
-- Preserves existing fish configuration while adding PATH entries
-- Creates backups of your existing fish configuration
-
-### macOS Script
-
-#### 3. Fish and Oh My Posh Installation for macOS
+#### 2. Fish and Oh My Posh Installation for macOS
 
 The `install-fish-ohmyposh-macos.sh` script automatically:
 - Checks for and installs Homebrew if not present
@@ -35,6 +26,13 @@ The `install-fish-ohmyposh-macos.sh` script automatically:
 - Downloads and installs Nerd Fonts (FiraCode)
 - Downloads Oh My Posh themes
 - Configures Oh My Posh in your Fish shell with the kushal theme
+
+#### 3. Bash PATH to Fish PATH Synchronization (Linux and macOS)
+
+The `sync-bash-path-to-fish-path.sh` script:
+- Synchronizes your current bash PATH environment variable to your fish configuration
+- Preserves existing fish configuration while adding PATH entries
+- Creates backups of your existing fish configuration
 
 ### Windows Script
 
@@ -59,7 +57,7 @@ For Fish and Oh My Posh installation on Linux:
 curl -fsSL https://raw.githubusercontent.com/Isidro-Zertucha/Fish-OhMyPosh-Automated-Installation-and-Copy-PATH-From-Bash-Scripts/main/scripts/install-fish-ohmyposh-linux.sh | bash
 ```
 
-For PATH synchronization on Linux:
+For PATH synchronization on Linux (and macOS):
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Isidro-Zertucha/Fish-OhMyPosh-Automated-Installation-and-Copy-PATH-From-Bash-Scripts/main/scripts/sync-bash-path-to-fish-path.sh | bash
 ```
@@ -75,7 +73,7 @@ cat install-fish-ohmyposh-linux.sh
 bash install-fish-ohmyposh-linux.sh
 ```
 
-For PATH synchronization on Linux:
+For PATH synchronization on Linux (and macOS):
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Isidro-Zertucha/Fish-OhMyPosh-Automated-Installation-and-Copy-PATH-From-Bash-Scripts/main/scripts/sync-bash-path-to-fish-path.sh -o sync-bash-path-to-fish-path.sh
 # Review the script contents
@@ -98,6 +96,20 @@ curl -fsSL https://raw.githubusercontent.com/Isidro-Zertucha/Fish-OhMyPosh-Autom
 cat install-fish-ohmyposh-macos.sh
 # Execute if you're satisfied
 bash install-fish-ohmyposh-macos.sh
+```
+
+For PATH synchronization on macOS (and Linux):
+```bash
+curl -fsSL https://raw.githubusercontent.com/Isidro-Zertucha/Fish-OhMyPosh-Automated-Installation-and-Copy-PATH-From-Bash-Scripts/main/scripts/sync-bash-path-to-fish-path.sh | bash
+```
+
+Or download and review first:
+```bash
+curl -fsSL https://raw.githubusercontent.com/Isidro-Zertucha/Fish-OhMyPosh-Automated-Installation-and-Copy-PATH-From-Bash-Scripts/main/scripts/sync-bash-path-to-fish-path.sh -o sync-bash-path-to-fish-path.sh
+# Review the script contents
+cat sync-bash-path-to-fish-path.sh
+# Execute if you're satisfied
+bash sync-bash-path-to-fish-path.sh
 ```
 
 ### Windows Usage
