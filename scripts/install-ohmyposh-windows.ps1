@@ -47,40 +47,90 @@ if (!(Test-Path $fontsPath)) {
     New-Item -ItemType Directory -Path $fontsPath -Force
 }
 
-# Download FiraCode Nerd Font
+# Download FiraCode Nerd Font with verification
 $fontUrl = "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/FiraCode.zip"
 $fontZipPath = "$env:TEMP\FiraCode.zip"
 
 Write-Host "Downloading Nerd Font..." -ForegroundColor Cyan
-Invoke-WebRequest -Uri $fontUrl -OutFile $fontZipPath
-
-# Extract font files
-$fontExtractPath = "$env:TEMP\FiraCode"
-Expand-Archive -Path $fontZipPath -DestinationPath $fontExtractPath -Force
-
-# Copy FiraCode font files to the Windows Fonts directory with proper registry entries
-Get-ChildItem -Path $fontExtractPath -Filter "*FiraCode*" | ForEach-Object {
-    $fontSource = $_.FullName
-    $fontName = $_.Name
-
-    # Copy to user fonts directory
-    $fontDestination = Join-Path $fontsPath $fontName
-    Copy-Item $fontSource -Destination $fontDestination -Force
-
-    # For admin users, also copy to system fonts and register in registry
-    if ($isAdmin) {
-        $systemFontPath = "$env:windir\Fonts\$fontName"
-        Copy-Item $fontSource -Destination $systemFontPath -Force
-
-        # Add registry entry for the font (making it system-wide)
-        $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts"
-        $fontRegistryName = $fontName -replace '\.ttf|\.otf|\.ttc|\.otc$', ''
-        $fontRegistryName += " (TrueType)"
-        Set-ItemProperty -Path $registryPath -Name $fontRegistryName -Value $fontName -Force
-    } else {
-        # For non-admin users, just copy to user fonts directory
-        Write-Host "Note: Running as non-administrator. Font installed to user directory only." -ForegroundColor Yellow
+try {
+    Invoke-WebRequest -Uri $fontUrl -OutFile $fontZipPath -ErrorAction Stop
+    
+    # Verify the zip file is valid before extracting
+    if (Test-Path $fontZipPath) {
+        $fileInfo = Get-Item $fontZipPath
+        if ($fileInfo.Length -eq 0) {
+            throw "Downloaded file is empty"
+        }
+        
+        Write-Host "Verifying downloaded font archive integrity..." -ForegroundColor Cyan
+        # Try to test the archive before extracting
+        try {
+            Add-Type -AssemblyName System.IO.Compression.FileSystem
+            $archive = [System.IO.Compression.ZipFile]::OpenRead($fontZipPath)
+            $archive.Dispose()
+            Write-Host "Font archive verified successfully" -ForegroundColor Green
+        } catch {
+            Write-Host "Font archive verification failed: $($_.Exception.Message)" -ForegroundColor Red
+            # Try redownloading if verification fails
+            Write-Host "Retrying download..." -ForegroundColor Yellow
+            Remove-Item $fontZipPath -ErrorAction SilentlyContinue
+            Start-Sleep -Seconds 2
+            Invoke-WebRequest -Uri $fontUrl -OutFile $fontZipPath -ErrorAction Stop
+        }
     }
+} catch {
+    Write-Host "Failed to download font archive: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "Skipping font installation. You may install fonts manually later." -ForegroundColor Yellow
+    $fontsDownloaded = $false
+} 
+
+$fontsDownloaded = $true
+
+if ($fontsDownloaded) {
+    # Extract font files with error handling
+    $fontExtractPath = "$env:TEMP\FiraCode"
+    try {
+        # Remove any existing extraction directory
+        if (Test-Path $fontExtractPath) {
+            Remove-Item $fontExtractPath -Recurse -Force
+        }
+        
+        Expand-Archive -Path $fontZipPath -DestinationPath $fontExtractPath -Force -ErrorAction Stop
+        
+        # Copy FiraCode font files to the Windows Fonts directory with proper registry entries
+        Get-ChildItem -Path $fontExtractPath -Filter "*FiraCode*" | ForEach-Object {
+            $fontSource = $_.FullName
+            $fontName = $_.Name
+
+            # Copy to user fonts directory
+            $fontDestination = Join-Path $fontsPath $fontName
+            Copy-Item $fontSource -Destination $fontDestination -Force
+
+            # For admin users, also copy to system fonts and register in registry
+            if ($isAdmin) {
+                $systemFontPath = "$env:windir\Fonts\$fontName"
+                Copy-Item $fontSource -Destination $systemFontPath -Force
+
+                # Add registry entry for the font (making it system-wide)
+                $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts"
+                $fontRegistryName = $fontName -replace '\.ttf|\.otf|\.ttc|\.otc$', ''
+                $fontRegistryName += " (TrueType)"
+                Set-ItemProperty -Path $registryPath -Name $fontRegistryName -Value $fontName -Force
+            } else {
+                # For non-admin users, just copy to user fonts directory
+                Write-Host "Note: Running as non-administrator. Font installed to user directory only." -ForegroundColor Yellow
+            }
+        }
+        
+        # Clean up extracted files
+        Remove-Item $fontExtractPath -Recurse -Force
+    } catch {
+        Write-Host "Error extracting font archive: $($_.Exception.Message)" -ForegroundColor Red
+        Write-Host "Font installation may not have completed successfully." -ForegroundColor Yellow
+    }
+    
+    # Clean up zip file
+    Remove-Item $fontZipPath -ErrorAction SilentlyContinue
 }
 
 # Refresh the font cache
@@ -102,18 +152,57 @@ if (!(Test-Path $themesPath)) {
     New-Item -ItemType Directory -Path $themesPath -Force
 }
 
-# Download themes
+# Download themes with verification
 $themesUrl = "https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/themes.zip"
 $themesZipPath = "$themesPath\themes.zip"
 
 Write-Host "Downloading Oh My Posh themes..." -ForegroundColor Cyan
-Invoke-WebRequest -Uri $themesUrl -OutFile $themesZipPath
+try {
+    Invoke-WebRequest -Uri $themesUrl -OutFile $themesZipPath -ErrorAction Stop
+    
+    # Verify the zip file is valid before extracting
+    if (Test-Path $themesZipPath) {
+        $fileInfo = Get-Item $themesZipPath
+        if ($fileInfo.Length -eq 0) {
+            throw "Downloaded themes file is empty"
+        }
+        
+        Write-Host "Verifying downloaded themes archive integrity..." -ForegroundColor Cyan
+        # Try to test the archive before extracting
+        try {
+            Add-Type -AssemblyName System.IO.Compression.FileSystem
+            $archive = [System.IO.Compression.ZipFile]::OpenRead($themesZipPath)
+            $archive.Dispose()
+            Write-Host "Themes archive verified successfully" -ForegroundColor Green
+        } catch {
+            Write-Host "Themes archive verification failed: $($_.Exception.Message)" -ForegroundColor Red
+            # Try redownloading if verification fails
+            Write-Host "Retrying download..." -ForegroundColor Yellow
+            Remove-Item $themesZipPath -ErrorAction SilentlyContinue
+            Start-Sleep -Seconds 2
+            Invoke-WebRequest -Uri $themesUrl -OutFile $themesZipPath -ErrorAction Stop
+        }
+    }
+} catch {
+    Write-Host "Failed to download themes archive: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "Skipping themes installation. You may install themes manually later." -ForegroundColor Yellow
+    $themesDownloaded = $false
+}
 
-# Extract themes
-Expand-Archive -Path $themesZipPath -DestinationPath $themesPath -Force
+$themesDownloaded = $true
 
-# Clean up
-Remove-Item $themesZipPath -Force
+if ($themesDownloaded) {
+    try {
+        # Extract themes with error handling
+        Expand-Archive -Path $themesZipPath -DestinationPath $themesPath -Force -ErrorAction Stop
+        
+        # Clean up
+        Remove-Item $themesZipPath -ErrorAction SilentlyContinue
+        Write-Host "Oh My Posh themes installed successfully" -ForegroundColor Green
+    } catch {
+        Write-Host "Error extracting themes archive: $($_.Exception.Message)" -ForegroundColor Red
+    }
+}
 
 Write-Host "Configuring PowerShell profile..." -ForegroundColor Yellow
 
@@ -163,15 +252,84 @@ if ($psreadlineAvailable) {
     }
 }
 
+# Create a more robust Oh My Posh initialization that prevents PSReadLine errors
+$robustInitLine = @'
+
+# Oh My Posh Configuration - Robust Version
+if (Get-Command oh-my-posh -ErrorAction SilentlyContinue) {
+    $ompConfigPath = "$env:LOCALAPPDATA\oh-my-posh\themes\kushal.omp.json"
+    if (Test-Path $ompConfigPath) {
+        oh-my-posh init pwsh --config $ompConfigPath | Invoke-Expression
+    } else {
+        # Fallback: use any available theme
+        $themeFiles = Get-ChildItem "$env:LOCALAPPDATA\oh-my-posh\themes" -Filter "*.omp.json" | Select-Object -First 1
+        if ($themeFiles) {
+            oh-my-posh init pwsh --config "$env:LOCALAPPDATA\oh-my-posh\themes\$($themeFiles.Name)" | Invoke-Expression
+        } else {
+            Write-Host "No Oh My Posh themes found. Please reinstall Oh My Posh." -ForegroundColor Red
+        }
+    }
+} else {
+    Write-Host "Oh My Posh command not found. Please ensure Oh My Posh is installed and in PATH." -ForegroundColor Red
+}
+'@
+
 # Add Oh My Posh initialization to PowerShell profile
 $profileContent = Get-Content $PROFILE -ErrorAction SilentlyContinue
 
-if ($profileContent -notcontains $initLine) {
-    Add-Content -Path $PROFILE -Value "`n# Oh My Posh Configuration"
-    Add-Content -Path $PROFILE -Value $initLine
-    Write-Host "Added Oh My Posh initialization to PowerShell profile" -ForegroundColor Green
+# Check if there's existing Oh My Posh configuration that might cause PSReadLine errors
+$existingOhMyPosh = $false
+if ($profileContent) {
+    foreach ($line in $profileContent) {
+        if ($line -match "oh-my-posh init pwsh" -and $line -match "Invoke-Expression") {
+            $existingOhMyPosh = $true
+            break
+        }
+    }
+}
+
+if ($existingOhMyPosh) {
+    Write-Host "Found existing Oh My Posh configuration that may cause PSReadLine errors." -ForegroundColor Yellow
+    Write-Host "Replacing with robust initialization..." -ForegroundColor Cyan
+    
+    # Remove old Oh My Posh initialization
+    $updatedProfile = @()
+    $skipNextLine = $false
+    foreach ($line in $profileContent) {
+        if ($skipNextLine) {
+            $skipNextLine = $false
+            continue
+        }
+        
+        if ($line -match "oh-my-posh init pwsh" -and ($line -match "Invoke-Expression" -or $line -match "# Oh My Posh Configuration")) {
+            # Skip this line and potentially the next line if it's a continuation
+            $skipNextLine = $true
+            continue
+        }
+        
+        # Check if this is the single line containing both commands
+        if ($line -match "oh-my-posh init pwsh.*Invoke-Expression") {
+            continue
+        }
+        
+        $updatedProfile += $line
+    }
+    
+    # Add the robust initialization
+    $updatedProfile += $robustInitLine
+    
+    # Write the updated profile
+    $updatedProfile | Set-Content $PROFILE
+    Write-Host "Updated PowerShell profile with robust Oh My Posh initialization" -ForegroundColor Green
 } else {
-    Write-Host "Oh My Posh initialization already present in PowerShell profile" -ForegroundColor Green
+    # Check if the robust initialization is already present
+    $profileText = $profileContent -join "`n"
+    if ($profileText -notmatch [regex]::Escape($robustInitLine).Replace('\#', '#')) {
+        Add-Content -Path $PROFILE -Value $robustInitLine
+        Write-Host "Added robust Oh My Posh initialization to PowerShell profile" -ForegroundColor Green
+    } else {
+        Write-Host "Robust Oh My Posh initialization already present in PowerShell profile" -ForegroundColor Green
+    }
 }
 
 Write-Host "Installation complete!" -ForegroundColor Green

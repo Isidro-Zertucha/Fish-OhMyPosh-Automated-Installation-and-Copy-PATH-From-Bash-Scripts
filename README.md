@@ -49,6 +49,13 @@ The `fix-ohmyposh-init.ps1` PowerShell script:
 - Updates the PowerShell profile with a more compatible initialization
 - Ensures Oh My Posh works properly with different PSReadLine versions
 
+#### 6. Manual Profile Update Script (Windows)
+
+The `update-profile-manually.ps1` PowerShell script:
+- Provides an alternative way to manually update your PowerShell profile
+- Fixes PSReadLine errors by replacing problematic initialization code
+- Offers more control over the Oh My Posh initialization process
+
 ## Available Themes
 
 The scripts install the kushal theme by default, but Oh My Posh offers many other themes. You can browse all available themes at [Oh My Posh Themes](https://ohmypo.sh/docs/themes#kushal). After installation, you can change to a different theme by modifying your shell configuration file with your preferred theme from the gallery.
@@ -115,7 +122,8 @@ If you've installed the fonts but they're not showing up in your terminal:
 - **Font not appearing in terminal**: This is usually because the font wasn't properly registered in the system or the terminal isn't configured to use it.
 - **Prompt symbols not showing correctly**: This typically means your terminal is not using a Nerd Font that supports the symbols needed by Oh My Posh.
 - **Oh My Posh not initializing**: Check your PowerShell profile (`$PROFILE`) to verify the initialization line was added correctly.
-- **Get-PSReadLineKeyHandler errors on startup**: If you see red error messages about positional parameters with Spacebar, Enter, or Ctrl+c, run the `fix-ohmyposh-init.ps1` script to update the initialization with a PSReadLine-compatible version.
+- **Get-PSReadLineKeyHandler errors on startup**: If you see red error messages about positional parameters with Spacebar, Enter, or Ctrl+c, run either the `fix-ohmyposh-init.ps1` or `update-profile-manually.ps1` script to update the initialization with a PSReadLine-compatible version.
+- **Zip archive extraction errors**: If you see "End of Central Directory record could not be found" errors, this is typically due to incomplete downloads. The updated script now includes verification and retry logic to handle this. If problems persist, you may need to download the zip files manually.
 
 ## License
 
