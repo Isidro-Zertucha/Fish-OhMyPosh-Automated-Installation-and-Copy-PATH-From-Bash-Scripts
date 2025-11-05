@@ -41,56 +41,27 @@ The scripts install the kushal theme by default, but Oh My Posh offers many othe
 
 ## Usage
 
-#### Option 1: Execute directly from GitHub (Review first!)
+### Linux/macOS
 
-**IMPORTANT**: Before running these commands, review the scripts on GitHub to ensure you're comfortable with what they do.
+To install Fish shell with Oh My Posh on Linux/macOS, run this command directly in your terminal:
 
-For Fish and Oh My Posh installation on Linux/macOS:
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Isidro-Zertucha/Fish-OhMyPosh-Automated-Installation-and-Copy-PATH-From-Bash-Scripts/main/scripts/install-fish-ohmyposh.sh | bash
 ```
 
-For PATH synchronization on Linux/macOS:
+To synchronize your bash PATH to fish PATH on Linux/macOS, run this command in your terminal after installing Fish and Oh My Posh (note: this is automatically done at the end of the installation script if you respond "y"):
+
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Isidro-Zertucha/Fish-OhMyPosh-Automated-Installation-and-Copy-PATH-From-Bash-Scripts/main/scripts/sync-bash-path-to-fish-path.sh | bash
 ```
 
-#### Option 2: Download, review, then execute
+### Windows
 
-For Fish and Oh My Posh installation on Linux/macOS:
-```bash
-curl -fsSL https://raw.githubusercontent.com/Isidro-Zertucha/Fish-OhMyPosh-Automated-Installation-and-Copy-PATH-From-Bash-Scripts/main/scripts/install-fish-ohmyposh.sh -o install-fish-ohmyposh.sh
-# Review the script contents
-cat install-fish-ohmyposh.sh
-# Execute if you're satisfied
-bash install-fish-ohmyposh.sh
-```
-
-For PATH synchronization on Linux/macOS:
-```bash
-curl -fsSL https://raw.githubusercontent.com/Isidro-Zertucha/Fish-OhMyPosh-Automated-Installation-and-Copy-PATH-From-Bash-Scripts/main/scripts/sync-bash-path-to-fish-path.sh -o sync-bash-path-to-fish-path.sh
-# Review the script contents
-cat sync-bash-path-to-fish-path.sh
-# Execute if you're satisfied
-bash sync-bash-path-to-fish-path.sh
-```
-
-### Windows Usage
-
-For Oh My Posh installation on Windows (PowerShell), download the script and run it in PowerShell:
+To install Oh My Posh on Windows with PowerShell, run this command directly in an Administrator PowerShell terminal (for best results run as Administrator):
 
 ```powershell
-# Download the script
-curl -fsSL https://raw.githubusercontent.com/Isidro-Zertucha/Fish-OhMyPosh-Automated-Installation-and-Copy-PATH-From-Bash-Scripts/main/scripts/install-ohmyposh-windows.ps1 -o install-ohmyposh-windows.ps1
-
-# Review the script contents
-Get-Content install-ohmyposh-windows.ps1
-
-# Execute if you're satisfied (run in PowerShell as Administrator for best results)
-./install-ohmyposh-windows.ps1
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-Expression "& {$(Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/Isidro-Zertucha/Fish-OhMyPosh-Automated-Installation-and-Copy-PATH-From-Bash-Scripts/main/scripts/install-ohmyposh-windows.ps1')}"
 ```
-
-Note: The Windows script requires PowerShell and works best when run with Administrator privileges.
 
 ## Security Notice
 
