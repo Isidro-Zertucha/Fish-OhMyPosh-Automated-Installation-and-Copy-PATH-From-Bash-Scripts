@@ -35,6 +35,20 @@ The `install-ohmyposh-windows.ps1` PowerShell script:
 - Downloads Oh My Posh themes
 - Configures Oh My Posh in your PowerShell profile with the kushal theme
 
+#### 4. Font Validation Script (Windows)
+
+The `validate-fonts.ps1` PowerShell script:
+- Checks if Nerd Fonts are properly installed and available to terminals
+- Helps troubleshoot font availability issues
+- Provides instructions for setting up fonts in different terminals
+
+#### 5. Oh My Posh Initialization Fix (Windows)
+
+The `fix-ohmyposh-init.ps1` PowerShell script:
+- Fixes the Get-PSReadLineKeyHandler error that appears on PowerShell startup
+- Updates the PowerShell profile with a more compatible initialization
+- Ensures Oh My Posh works properly with different PSReadLine versions
+
 ## Available Themes
 
 The scripts install the kushal theme by default, but Oh My Posh offers many other themes. You can browse all available themes at [Oh My Posh Themes](https://ohmypo.sh/docs/themes#kushal). After installation, you can change to a different theme by modifying your shell configuration file with your preferred theme from the gallery.
@@ -79,6 +93,29 @@ The Linux/macOS script requires `sudo` access to install Fish and Oh My Posh to 
 - PowerShell 5.1 or later
 - Internet connection for downloading dependencies
 - Administrator privileges recommended for optimal installation
+
+## Troubleshooting
+
+### Windows Font Issues
+
+If you've installed the fonts but they're not showing up in your terminal:
+
+1. **Run as Administrator**: Make sure you ran the installation script as an Administrator for full font system integration.
+2. **Validate Font Installation**: Run the validation script to check if fonts are properly installed:
+   ```powershell
+   # Navigate to the scripts directory and run the validation script
+   .\validate-fonts.ps1
+   ```
+3. **Restart Your Terminal**: Close and reopen your terminal application completely.
+4. **Check Terminal Settings**: Make sure your terminal is configured to use a Nerd Font (e.g., "FiraCode NF").
+5. **System Restart**: If fonts still don't appear, restart your computer to ensure Windows properly registers the fonts.
+
+### Common Issues
+
+- **Font not appearing in terminal**: This is usually because the font wasn't properly registered in the system or the terminal isn't configured to use it.
+- **Prompt symbols not showing correctly**: This typically means your terminal is not using a Nerd Font that supports the symbols needed by Oh My Posh.
+- **Oh My Posh not initializing**: Check your PowerShell profile (`$PROFILE`) to verify the initialization line was added correctly.
+- **Get-PSReadLineKeyHandler errors on startup**: If you see red error messages about positional parameters with Spacebar, Enter, or Ctrl+c, run the `fix-ohmyposh-init.ps1` script to update the initialization with a PSReadLine-compatible version.
 
 ## License
 

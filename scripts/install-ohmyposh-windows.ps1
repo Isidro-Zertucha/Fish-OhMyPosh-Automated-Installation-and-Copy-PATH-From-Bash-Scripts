@@ -58,20 +58,40 @@ Invoke-WebRequest -Uri $fontUrl -OutFile $fontZipPath
 $fontExtractPath = "$env:TEMP\FiraCode"
 Expand-Archive -Path $fontZipPath -DestinationPath $fontExtractPath -Force
 
-# Copy font files to Fonts directory
-Get-ChildItem -Path $fontExtractPath -Filter "*Fira*" | ForEach-Object {
-    $fontDestination = Join-Path $fontsPath $_.Name
-    Copy-Item $_.FullName -Destination $fontDestination -Force
+# Copy FiraCode font files to the Windows Fonts directory with proper registry entries
+Get-ChildItem -Path $fontExtractPath -Filter "*FiraCode*" | ForEach-Object {
+    $fontSource = $_.FullName
+    $fontName = $_.Name
+
+    # Copy to user fonts directory
+    $fontDestination = Join-Path $fontsPath $fontName
+    Copy-Item $fontSource -Destination $fontDestination -Force
+
+    # For admin users, also copy to system fonts and register in registry
+    if ($isAdmin) {
+        $systemFontPath = "$env:windir\Fonts\$fontName"
+        Copy-Item $fontSource -Destination $systemFontPath -Force
+
+        # Add registry entry for the font (making it system-wide)
+        $registryPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts"
+        $fontRegistryName = $fontName -replace '\.ttf|\.otf|\.ttc|\.otc$', ''
+        $fontRegistryName += " (TrueType)"
+        Set-ItemProperty -Path $registryPath -Name $fontRegistryName -Value $fontName -Force
+    } else {
+        # For non-admin users, just copy to user fonts directory
+        Write-Host "Note: Running as non-administrator. Font installed to user directory only." -ForegroundColor Yellow
+    }
 }
 
-# Install fonts (requires admin)
-if ($isAdmin) {
-    Get-ChildItem -Path $fontExtractPath -Filter "*Fira*" | ForEach-Object {
-        $fontSource = $_.FullName
-        $fontDestination = "$env:windir\Fonts\$($_.Name)"
-        Copy-Item $fontSource -Destination $fontDestination -Force
-        # Register font in registry (simplified)
+# Refresh the font cache
+Write-Host "Refreshing font cache..." -ForegroundColor Cyan
+try {
+    # This will try to refresh the font cache by restarting the Windows Font Cache service
+    if ($isAdmin) {
+        Restart-Service FontCache -Force -ErrorAction SilentlyContinue
     }
+} catch {
+    Write-Host "Could not restart font cache service. Font may require system restart to appear in applications." -ForegroundColor Yellow
 }
 
 Write-Host "Installing Oh My Posh themes..." -ForegroundColor Yellow
@@ -123,6 +143,23 @@ if ($kushalThemePath) {
     } else {
         Write-Host "No themes found, using default agnoster theme" -ForegroundColor Yellow
         $initLine = 'oh-my-posh init pwsh --config "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/agnoster.omp.json" | Invoke-Expression'
+    }
+}
+
+# Check if PSReadLine module is available to avoid issues during initialization
+$psreadlineAvailable = Get-Module -ListAvailable -Name "PSReadLine"
+
+if ($psreadlineAvailable) {
+    Write-Host "PSReadLine is available" -ForegroundColor Green
+} else {
+    Write-Host "PSReadLine not available, the script will attempt to install it" -ForegroundColor Yellow
+    # Attempt to install PSReadLine if it's not available
+    try {
+        Install-Module -Name PSReadLine -Force -AllowClobber -Scope CurrentUser -ErrorAction SilentlyContinue
+        Write-Host "PSReadLine module installed successfully" -ForegroundColor Green
+    } catch {
+        Write-Host "Failed to install PSReadLine module: $($_.Exception.Message)" -ForegroundColor Red
+        Write-Host "This may cause issues with Oh My Posh functionality." -ForegroundColor Yellow
     }
 }
 
