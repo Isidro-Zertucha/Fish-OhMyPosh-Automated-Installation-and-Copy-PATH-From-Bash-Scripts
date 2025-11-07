@@ -21,7 +21,8 @@ The `install-fish-ohmyposh.sh` script automatically:
 #### 2. Bash PATH to Fish PATH Synchronization (Linux and macOS)
 
 The `sync-bash-path-to-fish-path.sh` script:
-- Synchronizes your current bash PATH environment variable to your fish configuration
+- Synchronizes your bash PATH environment variable to your fish configuration, including paths from NVM, SDKMAN, and other tools sourced from bash initialization files
+- Sources bash configuration files (.bashrc, .bash_profile, .profile) to capture environment changes made by tools like NVM and SDKMAN
 - Preserves existing fish configuration while adding PATH entries
 - Creates backups of your existing fish configuration
 
